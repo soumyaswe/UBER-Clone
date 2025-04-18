@@ -160,3 +160,207 @@ Notes:
 - Ensure that the token is passed in the `Authorization` header or as a cookie.
 - The `/users/logout` endpoint adds the token to a blacklist to prevent further use.
 
+---
+
+### Endpoint : `/captains/register`
+
+### Method: `POST`
+
+**Description:**  
+Registers a new captain with their details and vehicle information.
+
+---
+
+**Request Body:**
+| Field                  | Type   | Description                                      |
+|------------------------|--------|--------------------------------------------------|
+| `fullname.firstname`   | String | First name of the captain (minimum 3 characters).|
+| `fullname.lastname`    | String | Last name of the captain (minimum 3 characters). |
+| `email`                | String | Email address of the captain (must be valid).    |
+| `password`             | String | Password for the captain (minimum 5 characters). |
+| `vehicle.color`        | String | Vehicle color (minimum 3 characters).            |
+| `vehicle.plate`        | String | Vehicle plate number (minimum 3 characters).     |
+| `vehicle.capacity`     | Number | Vehicle capacity (must be at least 1).           |
+| `vehicle.vehicleType`  | String | Vehicle type (e.g., car, bike, auto).            |
+
+**Example Request:**
+```json
+{
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "johndoe@example.com",
+  "password": "securepassword",
+  "vehicle": {
+    "color": "Red",
+    "plate": "ABC123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+**Example Response:**
+- **201 Created:**
+```json
+{
+  "token": "jwt_token_here",
+  "captain": {
+    "_id": "captain_id",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "johndoe@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive"
+  }
+}
+```
+- **400 Bad Request:**
+```json
+{
+  "message": "Captain already exists"
+}
+```
+
+---
+
+### Endpoint : `/captains/login`
+
+### Method: `POST`
+
+**Description:**  
+Logs in a captain using their email and password.
+
+---
+
+**Request Body:**
+| Field      | Type   | Description                                      |
+|------------|--------|--------------------------------------------------|
+| `email`    | String | Email address of the captain (must be valid).    |
+| `password` | String | Password for the captain (minimum 5 characters). |
+
+**Example Request:**
+```json
+{
+  "email": "johndoe@example.com",
+  "password": "securepassword"
+}
+```
+
+**Example Response:**
+- **200 OK:**
+```json
+{
+  "token": "jwt_token_here",
+  "captain": {
+    "_id": "captain_id",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "johndoe@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive"
+  }
+}
+```
+- **401 Unauthorized:**
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
+---
+
+### Endpoint : `/captains/profile`
+
+### Method: `GET`
+
+
+**Description:**  
+Fetches the profile of the currently logged-in captain.
+
+---
+
+**Headers:**
+| Header          | Value               | Description                     |
+|------------------|---------------------|---------------------------------|
+| `Authorization` | Bearer `<JWT Token>`| The JWT token of the captain.   |
+
+**Example Response:**
+- **200 OK:**
+```json
+{
+  "captain": {
+    "_id": "captain_id",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "johndoe@example.com",
+    "vehicle": {
+      "color": "Red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "status": "inactive"
+  }
+}
+```
+- **401 Unauthorized:**
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+---
+
+### Endpoint : `/captains/logout`
+
+### Method: `GET`
+
+**Description:**  
+Logs out the currently logged-in captain by blacklisting their token.
+
+---
+
+**Headers:**
+| Header          | Value               | Description                     |
+|------------------|---------------------|---------------------------------|
+| `Authorization` | Bearer `<JWT Token>`| The JWT token of the captain.   |
+
+**Example Response:**
+- **200 OK:**
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+- **401 Unauthorized:**
+```json
+{
+  "message": "Unauthorized"
+}
+```
+
+---
+
+### Notes:
+- Ensure that the token is passed in the `Authorization` header or as a cookie.
+- The `/captains/logout` endpoint adds the token to a blacklist to prevent further use.
