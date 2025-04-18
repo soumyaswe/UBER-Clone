@@ -162,7 +162,7 @@ Notes:
 
 ---
 
-### Endpoint : `/captains/register`
+## Endpoint : `/captains/register`
 
 ### Method: `POST`
 
@@ -232,7 +232,7 @@ Registers a new captain with their details and vehicle information.
 
 ---
 
-### Endpoint : `/captains/login`
+## Endpoint : `/captains/login`
 
 ### Method: `POST`
 
@@ -286,7 +286,7 @@ Logs in a captain using their email and password.
 
 ---
 
-### Endpoint : `/captains/profile`
+## Endpoint : `/captains/profile`
 
 ### Method: `GET`
 
@@ -331,7 +331,7 @@ Fetches the profile of the currently logged-in captain.
 
 ---
 
-### Endpoint : `/captains/logout`
+## Endpoint : `/captains/logout`
 
 ### Method: `GET`
 
