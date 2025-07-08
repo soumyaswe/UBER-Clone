@@ -4,13 +4,26 @@ import { Link } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import LocationSearchPanel from "../components/LocationSearchPanel";
+import VehiclePanel from "../components/VehiclePanel";
+import ConfirmRide from "../components/ConfirmRide";
+import VehicleFound from "../components/VehicleFound";
+import WaitingForDriver from "../components/WaitingForDriver";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
   const [destination, setDestination] = useState("");
   const [panelOpen, setPanelOpen] = useState(false);
+  const [vehiclePanel, setVehiclePanel] = useState(false);
+  const [confirmRide, setConfirmRide] = useState(false);
+  const [vehicleFound, setVehicleFound] = useState(false);
+  const [waitingForDriver, setWaitingForDriver] = useState(false);
+
   const panelRef = useRef(null);
   const panelCloseRef = useRef(null);
+  const vehiclePanelRef = useRef(null);
+  const confirmRideRef = useRef(null);
+  const vehicleFoundRef = useRef(null);
+  const waitingForDriverRef = useRef(null);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -19,6 +32,7 @@ const Home = () => {
     setDestination("");
   };
 
+  // find a trip panel animation
   useGSAP(
     function () {
       if (panelOpen) {
@@ -49,8 +63,89 @@ const Home = () => {
     [panelOpen]
   );
 
+  // vehicle panel animation
+  useGSAP(
+    function () {
+      if (vehiclePanel) {
+        gsap.to(vehiclePanelRef.current, {
+          transform: "translateY(0)",
+          duration: 0.5,
+          ease: "power2.inOut",
+        });
+      } else {
+        gsap.to(vehiclePanelRef.current, {
+          transform: "translateY(100%)",
+          duration: 0.5,
+          ease: "power2.inOut",
+        });
+      }
+    },
+    [vehiclePanel]
+  );
+
+  // confirm ride panel animation
+  useGSAP(
+    function () {
+      if (confirmRide) {
+        gsap.to(confirmRideRef.current, {
+          transform: "translateY(0)",
+          duration: 0.5,
+          ease: "power2.inOut",
+        });
+      } else {
+        gsap.to(confirmRideRef.current, {
+          transform: "translateY(100%)",
+          duration: 0.5,
+          ease: "power2.inOut",
+        });
+      }
+    },
+    [confirmRide]
+  );
+
+  // looking for driver panel animation
+  useGSAP(
+    function () {
+      if (vehicleFound) {
+        gsap.to(vehicleFoundRef.current, {
+          transform: "translateY(0)",
+          duration: 0.5,
+          ease: "power2.inOut",
+        });
+      } else {
+        gsap.to(vehicleFoundRef.current, {
+          transform: "translateY(100%)",
+          duration: 0.5,
+          ease: "power2.inOut",
+        });
+      }
+    },
+    [vehicleFound]
+  );
+
+  // waiting for driver panel animation
+  useGSAP(
+    function () {
+      if (waitingForDriver) {
+        gsap.to(waitingForDriverRef.current, {
+          transform: "translateY(0)",
+          duration: 0.5,
+          ease: "power2.inOut",
+        });
+      } else {
+        gsap.to(waitingForDriverRef.current, {
+          transform: "translateY(100%)",
+          duration: 0.5,
+          ease: "power2.inOut",
+        });
+      }
+    },
+    [waitingForDriver]
+  );
+
   return (
-    <div className="h-screen relative">
+    <div className="h-screen relative overflow-hidden">
+      {/* uber logo and profile logo */}
       <div className="flex justify-between">
         <img
           className="w-24 absolute px-4 py-5"
@@ -62,7 +157,7 @@ const Home = () => {
         <i className="right-0 ri-user-fill"></i>
       </div>
 
-      {/* temporary image */}
+      {/* temporary bg image */}
       <div>
         <img
           className="h-screen w-screen "
@@ -71,7 +166,9 @@ const Home = () => {
         />
       </div>
 
+      {/* find a trip + recent locations section */}
       <div className="h-screen absolute top-0 w-full flex flex-col justify-end">
+        {/* find a trip section */}
         <div className="h-1/3 bg-white rounded-lg px-4 relative">
           <div
             ref={panelCloseRef}
@@ -84,6 +181,7 @@ const Home = () => {
           </div>
           <h4 className="font-bold text-2xl  py-3">Find a trip</h4>
 
+          {/* pickup and destination input */}
           <form
             onSubmit={(e) => {
               submitHandler(e);
@@ -117,9 +215,51 @@ const Home = () => {
           </form>
         </div>
 
-        <div ref={panelRef} className="h-0 w-full bg-white">
-          <LocationSearchPanel />
+        {/* recent locations panel */}
+        <div ref={panelRef} className="h-0 px-4 w-full bg-white">
+          <LocationSearchPanel
+            setPanelOpen={setPanelOpen}
+            setVehiclePanel={setVehiclePanel}
+          />
         </div>
+      </div>
+
+      {/* vehicle confirmation panel */}
+      <div
+        ref={vehiclePanelRef}
+        className="fixed w-full z-10 translate-y-full bg-white bottom-0 px-4 py-4 rounded-lg"
+      >
+        <VehiclePanel
+          setConfirmRide={setConfirmRide}
+          setVehiclePanel={setVehiclePanel}
+        />
+      </div>
+
+      {/* ride confirmation panel */}
+      <div
+        ref={confirmRideRef}
+        className="fixed w-full z-10 translate-y-full bg-white bottom-0 px-4 py-4 rounded-lg"
+      >
+        <ConfirmRide
+          setConfirmRide={setConfirmRide}
+          setVehicleFound={setVehicleFound}
+        />
+      </div>
+
+      {/* looking for a driver panel */}
+      <div
+        ref={vehicleFoundRef}
+        className="fixed w-full z-10 translate-y-full bg-white bottom-0 px-4 py-4 rounded-lg"
+      >
+        <VehicleFound setVehicleFound={setVehicleFound} />
+      </div>
+
+      {/* waiting for a driver panel */}
+      <div
+        ref={waitingForDriverRef}
+        className="fixed w-full z-10  bg-white bottom-0 px-4 py-4 rounded-lg"
+      >
+        <WaitingForDriver waitingForDriver={waitingForDriver} />
       </div>
     </div>
   );

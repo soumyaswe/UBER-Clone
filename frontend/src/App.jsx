@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/home";
+import Home from "./pages/Home";
 import UserLogin from "./pages/userLogin";
 import UserSignUp from "./pages/UserSignUp";
 import CaptainLogin from "./pages/CaptainLogin";
@@ -11,6 +11,7 @@ import UserLogout from "./pages/UserLogout";
 import CaptainHome from "./pages/CaptainHome";
 import CaptainProtectWrapper from "./pages/CaptainProtectWrapper";
 import CaptainLogout from "./pages/CaptainLogout";
+import Riding from "./pages/Riding";
 
 const App = () => {
   return (
@@ -56,6 +57,8 @@ const App = () => {
             </CaptainProtectWrapper>
           }
         />
+
+        <Route path="/riding" element={<Riding />} />
       </Routes>
     </div>
   );
