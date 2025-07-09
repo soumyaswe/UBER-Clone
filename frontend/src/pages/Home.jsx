@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import "remixicon/fonts/remixicon.css";
 import { Link } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
