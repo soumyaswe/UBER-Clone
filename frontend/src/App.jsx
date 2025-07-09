@@ -32,7 +32,7 @@ const App = () => {
         />
 
         <Route
-          path="/user/logout"
+          path="/users/logout"
           element={
             <UserProtectWrapper>
               <UserLogout />
