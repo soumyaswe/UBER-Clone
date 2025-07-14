@@ -364,3 +364,163 @@ Logs out the currently logged-in captain by blacklisting their token.
 ### Notes:
 - Ensure that the token is passed in the `Authorization` header or as a cookie.
 - The `/captains/logout` endpoint adds the token to a blacklist to prevent further use.
+
+---
+
+## Endpoint: `/maps/get-coordinates`
+
+### Method: `GET`
+
+### Description:
+Returns the latitude and longitude for a given address using the Google Maps API.
+
+---
+
+### Query Parameters:
+| Parameter | Type   | Description                        |
+|-----------|--------|------------------------------------|
+| `address` | String | The address to geocode (min 3 chars)|
+
+### Headers:
+- `Authorization`: Bearer `<JWT Token>`
+
+### Example Request:
+```
+GET /maps/get-coordinates?address=Kolkata
+```
+
+### Example Response:
+```json
+{
+  "ltd": 22.5726,
+  "lang": 88.3639
+}
+```
+
+---
+
+## Endpoint: `/maps/get-distance-time`
+
+### Method: `GET`
+
+### Description:
+Returns the distance and estimated travel time between two locations.
+
+---
+
+### Query Parameters:
+| Parameter      | Type   | Description                        |
+|----------------|--------|------------------------------------|
+| `origin`       | String | Starting address (min 3 chars)     |
+| `destination`  | String | Destination address (min 3 chars)  |
+
+### Headers:
+- `Authorization`: Bearer `<JWT Token>`
+
+### Example Request:
+```
+GET /maps/get-distance-time?origin=Kolkata&destination=Howrah
+```
+
+### Example Response:
+```json
+{
+  "distance": {
+    "text": "10 km",
+    "value": 10000
+  },
+  "duration": {
+    "text": "30 mins",
+    "value": 1800
+  },
+  "status": "OK"
+}
+```
+
+---
+
+## Endpoint: `/maps/get-suggestions`
+
+### Method: `GET`
+
+### Description:
+Returns autocomplete suggestions for a location input.
+
+---
+
+### Query Parameters:
+| Parameter | Type   | Description                        |
+|-----------|--------|------------------------------------|
+| `input`   | String | The partial address to autocomplete (min 3 chars)|
+
+### Headers:
+- `Authorization`: Bearer `<JWT Token>`
+
+### Example Request:
+```
+GET /maps/get-suggestions?input=Kolk
+```
+
+### Example Response:
+```json
+[
+  {
+    "description": "Kolkata, West Bengal, India",
+    "place_id": "ChIJZ_YISduC-DkR1Fv7awOa-PA"
+  },
+  ...
+]
+```
+
+---
+
+## Endpoint: `/rides/create`
+
+### Method: `POST`
+
+### Description:
+Creates a new ride with fare calculation based on pickup and destination.
+
+---
+
+### Headers:
+- `Authorization`: Bearer `<JWT Token>`
+
+### Request Body:
+| Field         | Type   | Description                                      |
+|---------------|--------|--------------------------------------------------|
+| `pickup`      | String | Pickup location (min 3 chars)                    |
+| `destination` | String | Destination location (min 3 chars)               |
+| `vehicleType` | String | One of: `auto`, `car`, `moto`                    |
+
+**Example Request:**
+```json
+{
+  "pickup": "Kolkata",
+  "destination": "Howrah",
+  "vehicleType": "car"
+}
+```
+
+### Example Response:
+```json
+{
+  "_id": "ride_id_here",
+  "user": "user_id_here",
+  "pickup": "Kolkata",
+  "destination": "Howrah",
+  "fare": 250.5,
+  "otp": "1234",
+  "status": "pending",
+  // ...other ride fields...
+}
+```
+
+### Error Responses:
+- **400 Bad Request:** Validation errors (missing or invalid fields)
+- **500 Internal Server Error:** Server or calculation errors
+
+---
+
+**Note:**  
+All `/maps/*` and `/rides/create` endpoints require a valid JWT token in the `Authorization` header.
