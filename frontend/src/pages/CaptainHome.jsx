@@ -63,7 +63,7 @@ const CaptainHome = () => {
           alt=""
         />
         <Link
-          to="/captain-home"
+          to="/captains/logout"
           className="h-10 w-10 rounded-full bg-white flex items-center justify-center"
         >
           <i className="text-lg font-semibold ri-logout-box-r-line"></i>

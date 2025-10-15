@@ -16,6 +16,7 @@ const VehiclePanel = (props) => {
       <div
         onClick={() => {
           props.setConfirmRide(true);
+          props.setVehicleType('car');
         }}
         className="flex justify-between items-center mb-3 w-full px-4 py-2 border-2 border-white active:border-black rounded-xl"
       >
@@ -32,18 +33,19 @@ const VehiclePanel = (props) => {
             </span>{" "}
             4
           </h4>
-          <h5 lassName="font-medium text-base">2 mins away</h5>
+          <h5 className="font-medium text-base">2 mins away</h5>
           <p className="text-xs font-normal text-gray-600">
             Affordable, compact rides
           </p>
         </div>
-        <h2 className="text-lg font-semibold">₹ 193.20</h2>
+        <h2 className="text-lg font-semibold">₹ {props.fare.car}</h2>
       </div>
 
       {/* bike */}
       <div
         onClick={() => {
           props.setConfirmRide(true);
+          props.setVehicleType('moto');
         }}
         className="flex justify-between items-center mb-3 w-full px-4 py-2 border-2 border-white active:border-black rounded-xl"
       >
@@ -60,18 +62,19 @@ const VehiclePanel = (props) => {
             </span>{" "}
             1
           </h4>
-          <h5 lassName="font-medium text-base">3 mins away</h5>
+          <h5 className="font-medium text-base">3 mins away</h5>
           <p className="text-xs font-normal text-gray-600">
             Affordable motorcycle rides
           </p>
         </div>
-        <h2 className="text-lg font-semibold">₹ 65</h2>
+        <h2 className="text-lg font-semibold">₹ {props.fare.moto}</h2>
       </div>
 
       {/* auto */}
       <div
         onClick={() => {
           props.setConfirmRide(true);
+          props.setVehicleType('auto');
         }}
         className="flex justify-between items-center mb-3 w-full px-4 py-2 border-2 border-white active:border-black rounded-xl"
       >
@@ -88,12 +91,12 @@ const VehiclePanel = (props) => {
             </span>{" "}
             3
           </h4>
-          <h5 lassName="font-medium text-base">4 mins away</h5>
+          <h5 className="font-medium text-base">4 mins away</h5>
           <p className="text-xs font-normal text-gray-600">
             Affordable Auto rides
           </p>
         </div>
-        <h2 className="text-lg font-semibold">₹ 118.68</h2>
+        <h2 className="text-lg font-semibold">₹ {props.fare.auto}</h2>
       </div>
     </div>
   );

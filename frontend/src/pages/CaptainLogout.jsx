@@ -14,12 +14,17 @@ const CaptainLogout = () => {
         },
       })
       .then((response) => {
-        if (response.status == 200) {
+        if (response.status === 200) {
           localStorage.removeItem("token");
           navigate("/captain-login");
         }
-      });
-  });
+      })
+      // .catch(() => {
+      //   // Always remove token and redirect, even if API fails
+      //   localStorage.removeItem("token");
+      //   navigate("/captain-login");
+      }, [navigate, token]);
+  
 
   return <div>CaptainLogout</div>;
 };

@@ -1,6 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { CaptainDataContext } from '../context/CaptainContext'
 
 const CaptainDetails = () => {
+
+  const {captain} = useContext(CaptainDataContext);
+  console.log(captain)
+
+  if (!captain) {
+    return (
+      <div className="flex items-center justify-center h-full">
+        <div>Loading captain details...</div>
+      </div>
+    );
+  }
+
   return (
     <div>
         {/* driver details  */}
@@ -12,7 +25,7 @@ const CaptainDetails = () => {
               alt=""
             />
             <div>
-              <h4 className="text-xl font-semibold">Soumya Das</h4>
+              <h4 className="text-xl font-semibold">{captain.fullname.firstname + " " + captain.fullname.lastname}</h4>
               <p className="text-sm text-gray-600">Basic Level</p>
             </div>
           </div>

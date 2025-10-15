@@ -29,8 +29,7 @@ const ConfirmRide = (props) => {
             <div>
               <h3 className="text-lg font-semibold">KCAP</h3>
               <p className="text-sm text-gray-600">
-                Subhashpalli, Madhyamgram Municipality Ward 22, Kolkata, West
-                Bengal 700129
+                {props.pickup}
               </p>
             </div>
           </div>
@@ -43,8 +42,7 @@ const ConfirmRide = (props) => {
             <div>
               <h3 className="text-lg font-semibold">Debottam Apartments</h3>
               <p className="text-sm text-gray-600">
-                Madhyamgram Municipality Ward 19, South Bankimpally,
-                Madhyamgram, Kolkata, West Bengal 700129
+                {props.destination}
               </p>
             </div>
           </div>
@@ -56,7 +54,7 @@ const ConfirmRide = (props) => {
             </h2>
 
             <div>
-              <h3 className="text-lg font-semibold">₹ 193.20</h3>
+              <h3 className="text-lg font-semibold">₹ {props.fare}</h3>
               <p className="text-sm text-gray-600">Cash</p>
             </div>
           </div>
@@ -66,6 +64,7 @@ const ConfirmRide = (props) => {
           onClick={() => {
             props.setVehicleFound(true);
             props.setConfirmRide(false);
+            props.createRide();
           }}
           className="w-full text-xl text-white bg-black font-semibold rounded-lg p-2"
         >
