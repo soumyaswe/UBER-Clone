@@ -95,6 +95,7 @@ const Home = () => {
           transform: "translateY(0)",
           duration: 0.5,
           ease: "power2.inOut",
+          height: "90%"
         });
       } else {
         gsap.to(confirmRideRef.current, {
@@ -115,6 +116,7 @@ const Home = () => {
           transform: "translateY(0)",
           duration: 0.5,
           ease: "power2.inOut",
+          height: "83%"
         });
       } else {
         gsap.to(vehicleFoundRef.current, {
@@ -177,11 +179,22 @@ const Home = () => {
     setPanelOpen(false);
     setSuggestions([]);
     setActiveInput(null);
+    // Close all panels when suggestion is clicked
+    setVehiclePanel(false);
+    setConfirmRide(false);
+    setVehicleFound(false);
+    setWaitingForDriver(false);
   };
 
   const findTrip = async () => {
-    setVehiclePanel(true);
+    // Close all panels first
     setPanelOpen(false);
+    setConfirmRide(false);
+    setVehicleFound(false);
+    setWaitingForDriver(false);
+    
+    // Then open vehicle panel
+    setVehiclePanel(true);
 
     const response = await axios.get(
       `${import.meta.env.VITE_BASE_URL}/rides/get-fare`,
@@ -197,21 +210,30 @@ const Home = () => {
   };
 
   const createRide = async () => {
-    const response = await axios.post(
-      `${import.meta.env.VITE_BASE_URL}/rides/create`,
-      {
-        pickup,
-        destination,
-        vehicleType,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/rides/create`,
+        {
+          pickup,
+          destination,
+          vehicleType,
         },
-      }
-    );
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
-    console.log(response.data);
+      console.log(response.data);
+      
+      // Only show vehicle found panel after successful ride creation
+      setConfirmRide(false);
+      setVehicleFound(true);
+    } catch (error) {
+      console.error("Error creating ride:", error);
+      // Don't show vehicle found panel if there's an error
+    }
   };
 
   return (
@@ -240,7 +262,7 @@ const Home = () => {
       {/* find a trip + recent locations section */}
       <div className="h-screen absolute top-0 w-full flex flex-col justify-end">
         {/* find a trip section */}
-        <div className="h-1/3 bg-white rounded-lg px-4 relative">
+        <div className="h-2/5 bg-white rounded-lg px-4 relative">
           <div
             ref={panelCloseRef}
             onClick={() => {
@@ -254,7 +276,7 @@ const Home = () => {
 
           {/* pickup and destination input */}
           <form onSubmit={submitHandler}>
-            <div className="line absolute h-20 w-1 top-[36%] left-9 rounded-full bg-gray-900"></div>
+            {/* <div className="line absolute h-20 w-1 top-[36%] left-9 rounded-full bg-gray-900"></div> */}
             <input
               value={pickup}
               onChange={(e) => {
@@ -262,11 +284,21 @@ const Home = () => {
                 setActiveInput("pickup");
                 setPanelOpen(true);
                 fetchSuggestions(e.target.value);
+                // Close other panels when typing
+                setVehiclePanel(false);
+                setConfirmRide(false);
+                setVehicleFound(false);
+                setWaitingForDriver(false);
               }}
               onFocus={() => {
                 setActiveInput("pickup");
                 setPanelOpen(true);
                 fetchSuggestions(pickup);
+                // Close other panels when focusing
+                setVehiclePanel(false);
+                setConfirmRide(false);
+                setVehicleFound(false);
+                setWaitingForDriver(false);
               }}
               className="bg-[#eeeeee] w-full px-12 py-3 mb-5 rounded border text-lg placeholder:text-base"
               type="text"
@@ -279,11 +311,21 @@ const Home = () => {
                 setActiveInput("destination");
                 setPanelOpen(true);
                 fetchSuggestions(e.target.value);
+                // Close other panels when typing
+                setVehiclePanel(false);
+                setConfirmRide(false);
+                setVehicleFound(false);
+                setWaitingForDriver(false);
               }}
               onFocus={() => {
                 setActiveInput("destination");
                 setPanelOpen(true);
                 fetchSuggestions(destination);
+                // Close other panels when focusing
+                setVehiclePanel(false);
+                setConfirmRide(false);
+                setVehicleFound(false);
+                setWaitingForDriver(false);
               }}
               className="bg-[#eeeeee] w-full px-12 py-3 mb-5 rounded border text-lg placeholder:text-base"
               type="text"
@@ -299,7 +341,7 @@ const Home = () => {
         </div>
 
         {/* recent locations panel */}
-        <div ref={panelRef} className="h-0 px-4 w-full bg-white">
+        <div ref={panelRef} className="h-0 px-4 w-full bg-white overflow-y-auto">
           <LocationSearchPanel
             suggestions={suggestions}
             onSuggestionClick={handleSuggestionClick}
@@ -325,7 +367,7 @@ const Home = () => {
       {/* ride confirmation panel */}
       <div
         ref={confirmRideRef}
-        className="fixed w-full z-10 translate-y-full bg-white bottom-0 px-4 py-4 rounded-lg"
+        className="fixed h-0 w-full z-10 translate-y-full bg-white bottom-0 px-4 py-4 rounded-lg"
       >
         <ConfirmRide
           pickup={pickup}
@@ -341,7 +383,7 @@ const Home = () => {
       {/* looking for a driver panel */}
       <div
         ref={vehicleFoundRef}
-        className="fixed w-full z-10 translate-y-full bg-white bottom-0 px-4 py-4 rounded-lg"
+        className="fixed h-0 w-full z-10 translate-y-full bg-white bottom-0 px-4 py-4 rounded-lg"
       >
         <VehicleFound
           pickup={pickup}
@@ -355,7 +397,7 @@ const Home = () => {
       {/* waiting for a driver panel */}
       <div
         ref={waitingForDriverRef}
-        className="fixed w-full z-10  bg-white bottom-0 px-4 py-4 rounded-lg"
+        className="fixed h-0 w-full z-10 translate-y-full bg-white bottom-0 px-4 py-4 rounded-lg"
       >
         <WaitingForDriver waitingForDriver={waitingForDriver} />
       </div>
