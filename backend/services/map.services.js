@@ -2,9 +2,9 @@ const axios = require("axios");
 
 module.exports.getCoordinates = async (address) => {
     try {
-        const apiKey = process.env.MAPS_API;
+        const apiKey = process.env.GOOGLE_MAPS_API;
         const response = await axios.get(
-            "https://maps.gomaps.pro/maps/api/geocode/json",
+            "https://maps.googleapis.com/maps/api/geocode/json",
             {
                 params: {
                     address: address,
@@ -36,9 +36,9 @@ module.exports.getDistanceTime = async (origin, destination) => {
         throw new Error("Origin and destination are required.");
     }
 
-    const apiKey = process.env.MAPS_API;
+    const apiKey = process.env.GOOGLE_MAPS_API;
 
-    const url = `https://maps.gomaps.pro/maps/api/distancematrix/json?origins=${encodeURIComponent(origin)}&destinations=${encodeURIComponent(destination)}&key=${apiKey}`;
+    const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${encodeURIComponent(origin)}&destinations=${encodeURIComponent(destination)}&key=${apiKey}`;
 
     try {
         const response = await axios.get(url);
@@ -60,9 +60,9 @@ module.exports.getAutoSuggestions = async (input) => {
         throw new Error("Query is required");
     }
 
-    const apiKey = process.env.MAPS_API;
+    const apiKey = process.env.GOOGLE_MAPS_API;
 
-    const url = `https://maps.gomaps.pro/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&key=${apiKey}`;
+    const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${encodeURIComponent(input)}&key=${apiKey}`;
 
     try {
         const response = await axios.get(url);
