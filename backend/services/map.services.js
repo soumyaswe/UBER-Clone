@@ -1,4 +1,5 @@
 const axios = require("axios");
+const captainModel = require("../models/captain.model");
 
 module.exports.getCoordinates = async (address) => {
     try {
@@ -74,4 +75,16 @@ module.exports.getAutoSuggestions = async (input) => {
     } catch (err) {
         throw new Error("Error fetching auto suggestions");
     }
+}
+
+module.exports.getCaptainInTheRadius = async (ltd, lng, radius) => {
+    const captains = await captainModel.find({
+        location : {
+            $geoWithin : {
+                $centerSphere : [ [ ltd, lng ], radius / 6378.1 ]
+            }
+        }
+    });
+
+    return captains;
 }

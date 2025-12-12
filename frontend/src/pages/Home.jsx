@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
@@ -8,6 +8,8 @@ import ConfirmRide from "../components/ConfirmRide";
 import VehicleFound from "../components/VehicleFound";
 import WaitingForDriver from "../components/WaitingForDriver";
 import axios from "axios";
+import { SocketContext } from "../context/SocketContext"; 
+import {UserDataContext} from "../context/UserContext";
 
 const Home = () => {
   const [pickup, setPickup] = useState("");
@@ -28,6 +30,13 @@ const Home = () => {
   const confirmRideRef = useRef(null);
   const vehicleFoundRef = useRef(null);
   const waitingForDriverRef = useRef(null);
+
+  const {socket} = useContext(SocketContext);
+  const {user} = useContext(UserDataContext);
+
+  useEffect(() => {
+    socket.emit("join", { userType: "user", userId: user._id });
+  }, [user]); 
 
   const submitHandler = (e) => {
     e.preventDefault();
