@@ -5,7 +5,7 @@ const WaitingForDriver = (props) => {
     <div className="rounded-lg">
       <h5
         onClick={() => {
-          props.waitingForDriver(false);
+          props.setWaitingForDriver(false);
         }}
         className="text-center"
       >

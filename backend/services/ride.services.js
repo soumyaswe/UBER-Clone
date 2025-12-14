@@ -50,6 +50,7 @@ module.exports.createRide = async (pickup, destination, vehicleType, user) => {
   }
 
   const fare = await getFare(pickup, destination);
+  const distanceTime = await mapService.getDistanceTime(pickup, destination);
 
   const ride = await rideModel.create({
     user,
@@ -57,7 +58,26 @@ module.exports.createRide = async (pickup, destination, vehicleType, user) => {
     destination,
     otp: getOtp(4),
     fare: fare[vehicleType],
+    distance: distanceTime.distance.text,
+    duration: distanceTime.duration.text,
   });
 
   return ride;
 };
+
+module.exports.confirmRide = async ({rideId, captain}) => {
+  if (!rideId || !captain) {
+    throw new Error("Ride Id or Captain Id is required");
+  }
+
+  await rideModel.findOneAndUpdate({
+    _id : rideId
+  }, {
+    captain : captain._id,
+    status : 'accepted'
+  });
+
+  const ride = await rideModel.findOne({_id : rideId}).populate('user');
+
+  return ride;
+}

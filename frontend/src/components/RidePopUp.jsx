@@ -23,14 +23,14 @@ const RidePopUp = (props) => {
               alt=""
             />
             <div>
-              <h4 className="text-xl font-semibold">Test Customer</h4>
-              <p className="text-sm text-gray-600">Cash</p>
+              <h4 className="text-xl font-semibold">{props.ride?.user.fullname.firstname + " " + props.ride?.user.fullname.lastname}</h4>
+              {/* <p className="text-sm text-gray-600">Cash</p> */}
             </div>
           </div>
 
           <div className="text-right">
-            <h4 className="text-xl font-semibold">₹193.20</h4>
-            <p className="text-sm text-gray-600">2.2 km</p>
+            <h4 className="text-xl font-semibold">₹{props.ride?.fare}</h4>
+            <p className="text-sm text-gray-600">{props.ride?.distance}</p>
           </div>
         </div>
 
@@ -41,8 +41,7 @@ const RidePopUp = (props) => {
             <div className="-mt-4">
               <h3 className="text-lg font-semibold">KCAP</h3>
               <p className="text-sm text-gray-600">
-                Subhashpalli, Madhyamgram Municipality Ward 22, Kolkata, West
-                Bengal 700129
+                {props.ride?.pickup}
               </p>
             </div>
           </div>
@@ -53,8 +52,7 @@ const RidePopUp = (props) => {
             <div className="-mt-4">
               <h3 className="text-lg font-semibold">Debottam Apartments</h3>
               <p className="text-sm text-gray-600">
-                Madhyamgram Municipality Ward 19, South Bankimpally,
-                Madhyamgram, Kolkata, West Bengal 700129
+                {props.ride?.destination}
               </p>
             </div>
           </div>
@@ -64,6 +62,8 @@ const RidePopUp = (props) => {
         <button
           onClick={() => {
             props.setConfirmRidePopupPanel(true);
+            props.setRidePopupPanel(false);
+            props.confirmRide(props.ride)
           }}
           className="w-full text-xl text-black bg-yellow-400 font-bold mt-2 mb-2 rounded-lg p-2"
         >

@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import CaptainDetails from "../components/CaptainDetails";
 import RidePopUp from "../components/RidePopUp";
 import { useGSAP } from "@gsap/react";
@@ -9,8 +10,9 @@ import { SocketContext } from "../context/SocketContext.jsx";
 import { CaptainDataContext } from "../context/CaptainContext.jsx";
 
 const CaptainHome = () => {
-  const [ridePopupPanel, setRidePopupPanel] = useState(true);
+  const [ridePopupPanel, setRidePopupPanel] = useState(false);
   const [confirmRidePopupPanel, setConfirmRidePopupPanel] = useState(false);
+  const [ride, setRide] = useState(null);
 
   const ridePopupPanelRef = useRef(null);
   const confirmRidePopupPanelRef = useRef(null);
@@ -19,7 +21,6 @@ const CaptainHome = () => {
   const { captain } = useContext(CaptainDataContext);
 
   useEffect(() => {
-    
     if (captain && captain._id) {
       socket.emit("join", { userType: "captain", userId: captain._id });
     } else {
@@ -33,16 +34,42 @@ const CaptainHome = () => {
             userId: captain._id,
             location: {
               ltd: position.coords.latitude,
-              lng: position.coords.longitude
-            }
+              lng: position.coords.longitude,
+            },
           });
         });
       }
     }, 10000);
 
     return () => clearInterval(locationInterval);
+  }, [captain]);
 
-  }, [captain])
+  socket.on("new-ride", (data) => {
+    setRide(data);
+    setRidePopupPanel(true);
+  });
+
+  async function confirmRide(ride) {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/rides/confirm`,
+        {
+          rideId: ride._id,
+          captainId: captain._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      setRidePopupPanel(false);
+      setConfirmRidePopupPanel(true);
+    } catch (error) {
+      console.error("Error confirming ride:", error);
+    }
+  }
 
   // ride popup panel animation
   useGSAP(
@@ -119,15 +146,23 @@ const CaptainHome = () => {
         ref={ridePopupPanelRef}
         className="fixed w-full z-10 translate-y-full bg-white bottom-0 px-4 py-4 rounded-lg overflow-x-scroll"
       >
-        <RidePopUp setRidePopupPanel={setRidePopupPanel} setConfirmRidePopupPanel={setConfirmRidePopupPanel} />
+        <RidePopUp
+          ride={ride}
+          setRidePopupPanel={setRidePopupPanel}
+          setConfirmRidePopupPanel={setConfirmRidePopupPanel}
+          confirmRide={confirmRide}
+        />
       </div>
 
-      {/* ride ignore/accept panel */}
+      {/* ride confirmation panel */}
       <div
         ref={confirmRidePopupPanelRef}
         className="fixed w-full h-screen z-10 translate-y-full bg-white bottom-0 px-4 py-4 rounded-lg overflow-x-scroll"
       >
-        <ConfirmRidePopup setRidePopupPanel={setRidePopupPanel} setConfirmRidePopupPanel={setConfirmRidePopupPanel} />
+        <ConfirmRidePopup
+          setRidePopupPanel={setRidePopupPanel}
+          setConfirmRidePopupPanel={setConfirmRidePopupPanel}
+        />
       </div>
     </div>
   );

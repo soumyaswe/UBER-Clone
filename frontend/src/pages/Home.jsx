@@ -146,6 +146,7 @@ const Home = () => {
           transform: "translateY(0)",
           duration: 0.5,
           ease: "power2.inOut",
+          height: "83%",
         });
       } else {
         gsap.to(waitingForDriverRef.current, {
@@ -157,6 +158,11 @@ const Home = () => {
     },
     [waitingForDriver]
   );
+
+  socket.on("ride-confirmed", data => {
+    setVehicleFound(false);
+    setWaitingForDriver(true);
+  });
 
   // Handler to fetch suggestions
   const fetchSuggestions = async (input) => {
@@ -408,7 +414,7 @@ const Home = () => {
         ref={waitingForDriverRef}
         className="fixed h-0 w-full z-10 translate-y-full bg-white bottom-0 px-4 py-4 rounded-lg"
       >
-        <WaitingForDriver waitingForDriver={waitingForDriver} />
+        <WaitingForDriver setWaitingForDriver={setWaitingForDriver} />
       </div>
     </div>
   );

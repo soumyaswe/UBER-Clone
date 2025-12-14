@@ -31,10 +31,10 @@ const rideSchema = new mongoose.Schema({
         default : 'pending'
     },
     duration : {
-        type : Number
+        type : String
     },
     distance : {
-        type : Number
+        type : String
     },
     paymentId : {
         type : String
